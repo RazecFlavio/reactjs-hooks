@@ -23,6 +23,9 @@ export const HeaderContainer = styled.header`
       &:hover {
         border-bottom-color: ${(props) => props.theme['green-500']};
       }
+      &.active {
+        color: ${(props) => props.theme['green-500']};
+      }
     }
   }
 `;
