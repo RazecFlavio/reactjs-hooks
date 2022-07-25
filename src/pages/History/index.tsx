@@ -1,62 +1,61 @@
+import { useContext } from "react";
+import { formatDistanceToNow } from "date-fns";
+import ptBR from "date-fns/locale/pt-BR";
+
+import { CyclesContext } from "../../contexts/CyclesContext";
 import { HistoryContainer, HistoryList, Status } from "./style";
 
 export function History() {
-  return (
-    <HistoryContainer>
-      <h1>Meu histórico</h1>
+    const { cycles } = useContext(CyclesContext);
 
-      <HistoryList>
-        <table>
-          <thead>
-            <th>Tarefa</th>
-            <th>Duração</th>
-            <th>Início</th>
-            <th>Status</th>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Tareafas</td>
-              <td>20 minutos</td>
-              <td>há 2 meses</td>
-              <td>
-                <Status statusColor="green">Concluído</Status>
-              </td>
-            </tr>
-            <tr>
-              <td>Tareafas</td>
-              <td>20 minutos</td>
-              <td>há 2 meses</td>
-              <td>
-                <Status statusColor="green">Concluído</Status>
-              </td>
-            </tr>
-            <tr>
-              <td>Tareafas</td>
-              <td>20 minutos</td>
-              <td>há 2 meses</td>
-              <td>
-                <Status statusColor="green">Concluído</Status>
-              </td>
-            </tr>
-            <tr>
-              <td>Tareafas</td>
-              <td>20 minutos</td>
-              <td>há 2 meses</td>
-              <td>
-                <Status statusColor="yellow">Em andamento</Status>
-              </td>
-            </tr>
-            <tr>
-              <td>Tareafas</td>
-              <td>20 minutos</td>
-              <td>há 2 meses</td>
-              <td>
-                <Status statusColor="red">Interrompido</Status>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </HistoryList>
-    </HistoryContainer>
-  );
+    return (
+        <HistoryContainer>
+            <h1>Meu histórico</h1>
+
+            <HistoryList>
+                <table>
+                    <thead>
+                        <th>Tarefa</th>
+                        <th>Duração</th>
+                        <th>Início</th>
+                        <th>Status</th>
+                    </thead>
+                    <tbody>
+                        {cycles.map((cycle) => {
+                            return (
+                                <tr key={cycle.id}>
+                                    <td>{cycle.task}</td>
+                                    <td>{cycle.minutesAmount} minutos</td>
+                                    <td>
+                                        {formatDistanceToNow(cycle.startDate, {
+                                            addSuffix: true,
+                                            locale: ptBR,
+                                        })}
+                                    </td>
+                                    <td>
+                                        {cycle.finishedDate && (
+                                            <Status statusColor="green">
+                                                Concluído
+                                            </Status>
+                                        )}
+                                        {cycle.interruptDate && (
+                                            <Status statusColor="red">
+                                                Interrompido
+                                            </Status>
+                                        )}
+                                        {!cycle.finishedDate &&
+                                            !cycle.interruptDate && (
+                                                <Status statusColor="yellow">
+                                                    Em andamento
+                                                </Status>
+                                            )}
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </HistoryList>
+        </HistoryContainer>
+    );
 }
